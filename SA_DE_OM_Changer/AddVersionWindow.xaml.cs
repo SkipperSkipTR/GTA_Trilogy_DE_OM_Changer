@@ -1,30 +1,58 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 
 namespace SA_DE_OM_Changer
 {
     public partial class AddVersionWindow : Window
     {
-        public string GameVersion { get; private set; } = string.Empty;
-        public string AddressHex { get; private set; } = string.Empty;
+        private readonly List<GameInfo> _games;
 
-        public AddVersionWindow()
+        public string SelectedGame { get; private set; } = "";
+        public string GameVersion { get; private set; } = "";
+        public string AddressHex { get; private set; } = "";
+
+        public AddVersionWindow(List<GameInfo> supportedGames)
         {
             InitializeComponent();
+            _games = supportedGames;
+            GameComboBox.ItemsSource = _games;
+            GameComboBox.DisplayMemberPath = "DisplayName";
+            if (_games.Any())
+                GameComboBox.SelectedIndex = 0;
         }
 
-        private void Add_Click(object sender, RoutedEventArgs e)
+        private void OK_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(VersionBox.Text) || string.IsNullOrWhiteSpace(AddressBox.Text))
+            if (GameComboBox.SelectedItem == null)
             {
-                MessageBox.Show("Please enter both version and address.", "Invalid Input", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please select a game.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            GameVersion = VersionBox.Text.Trim();
-            AddressHex = AddressBox.Text.Trim(); // always hex, no 0x required
+            var selectedGame = (GameInfo)GameComboBox.SelectedItem;
+            SelectedGame = selectedGame.ProcessName;
+            GameVersion = VersionTextBox.Text.Trim();
+            AddressHex = AddressTextBox.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(GameVersion))
+            {
+                MessageBox.Show("Please enter a version string.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(AddressHex))
+            {
+                MessageBox.Show("Please enter an address.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
             DialogResult = true;
-            Close();
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
         }
     }
 }
