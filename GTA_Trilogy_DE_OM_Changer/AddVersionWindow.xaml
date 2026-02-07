@@ -70,10 +70,11 @@
                                 Use Cheat Engine to find the on_mission address:
                             </TextBlock>
                             <TextBlock TextWrapping="Wrap" Margin="0,0,0,8" Foreground="#ccc" FontSize="12">
-                                1. Search for byte value (0 or 1)<LineBreak/>
+                                1. Search for 4 bytes value (0 or 1)<LineBreak/>
                                 2. Start mission → value = 1<LineBreak/>
                                 3. End mission → value = 0<LineBreak/>
-                                4. Calculate: Address - Base = Offset
+                                4. Double click on address: It would look something like YourGame.exe + Offset<LineBreak/>
+                                5. Enter the offset to the box
                             </TextBlock>
                             <Border Background="#222" Padding="8" CornerRadius="3">
                                 <TextBlock Text="Example: 51BF148 or 0x51BF148" 
